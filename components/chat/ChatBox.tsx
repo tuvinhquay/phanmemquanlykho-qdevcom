@@ -56,10 +56,30 @@ export default function ChatBox() {
           id: (Date.now() + 1).toString(),
           senderId: 'ai',
           senderName: 'Gemini AI',
-          text: data.reply,
+          text: data.reply || 'Không có phản hồi từ AI.',
           timestamp: new Date(),
         };
         setMessages((prev) => [...prev, aiMessage]);
+      } else {
+        // Try to parse error details from server
+        let errText = 'Lỗi máy chủ khi gọi AI.';
+        try {
+          const err = await response.json();
+          if (err?.error) errText = typeof err.error === 'string' ? err.error : JSON.stringify(err.error);
+          else if (err?.details) errText = String(err.details);
+        } catch (e) {
+          // fallback to status text
+          errText = response.statusText || errText;
+        }
+
+        const errorMessage: ChatMessage = {
+          id: (Date.now() + 2).toString(),
+          senderId: 'ai',
+          senderName: 'Gemini AI',
+          text: `Lỗi: ${errText}`,
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, errorMessage]);
       }
     } catch (error) {
       console.error('Chat error:', error);
