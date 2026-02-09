@@ -1,9 +1,11 @@
-'use client';
+"use client";
 
 import { ChatMessage } from '@/types/index';
 import { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function ChatBox() {
+  const router = useRouter();
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: '1',
@@ -77,8 +79,22 @@ export default function ChatBox() {
   return (
     <div className="fixed bottom-6 right-6 w-96 h-96 bg-white rounded-lg shadow-2xl flex flex-col border border-slate-200 z-50">
       {/* Header */}
-      <div className="bg-blue-600 text-white p-4 rounded-t-lg font-bold">
-        💬 Chat hỗ trợ AI
+      <div className="bg-blue-600 text-white p-4 rounded-t-lg font-bold flex items-center justify-between">
+        <div>💬 Chat hỗ trợ AI</div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => router.push('/')}
+            className="text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded text-white"
+          >
+            Trang chủ
+          </button>
+          <button
+            onClick={() => router.back()}
+            className="text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded text-white"
+          >
+            Đóng
+          </button>
+        </div>
       </div>
 
       {/* Messages */}
